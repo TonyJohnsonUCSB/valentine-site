@@ -58,6 +58,12 @@
       line-height: 1.2;
     }
 
+    .sub {
+      margin: 0 0 14px;
+      opacity: 0.85;
+      font-size: clamp(0.95rem, 2.8vw, 1.05rem);
+    }
+
     .photo-wrap {
       margin: 8px auto 18px;
       width: min(100%, 460px);
@@ -98,7 +104,9 @@
       touch-action: manipulation;
     }
 
-    #yesBtn { background: var(--accent); }
+    #yesBtn {
+      background: var(--accent);
+    }
     #yesBtn:hover { background: var(--accent-dark); }
     #yesBtn:active { transform: scale(0.98); }
 
@@ -112,6 +120,25 @@
       min-height: 1.6em;
       font-weight: 700;
       font-size: clamp(1rem, 2.8vw, 1.1rem);
+    }
+
+    .music {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid #f3c8d8;
+      text-align: left;
+    }
+
+    .music p {
+      margin: 0 0 8px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .spotify {
+      border-radius: 12px;
+      overflow: hidden;
+      width: 100%;
     }
 
     /* floating hearts */
@@ -212,8 +239,7 @@
       background: #fffafc;
       border: 2px solid #f6d8e4;
       border-radius: 12px;
-      /* moved content down so flap doesn't cover text */
-      padding: 34px 14px 12px;
+      padding: 14px 14px 12px;
       text-align: left;
       transform: translateY(14%);
       transition: transform .7s cubic-bezier(.2,.75,.2,1);
@@ -258,29 +284,23 @@
 
     .envelope:hover .seal { transform: translate(-50%, -50%) scale(1.05); }
 
-    .envelope.open .env-flap { transform: rotateX(180deg); }
-    .envelope.open .letter { transform: translateY(-18%); }
+    .envelope.open .env-flap {
+      transform: rotateX(180deg);
+    }
+
+    .envelope.open .letter {
+      transform: translateY(-18%);
+    }
+
     .envelope.open .seal {
       opacity: 0;
       transform: translate(-50%, -50%) scale(0.7);
     }
 
-    /* hidden audio iframe (no visible Spotify widget) */
-    .hidden-audio {
-      position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
-      border: 0 !important;
-      opacity: 0 !important;
-      pointer-events: none !important;
-      left: -9999px !important;
-      top: -9999px !important;
-    }
-
     @media (max-width: 430px) {
       .btn-row { min-height: 64px; }
       button { padding: 11px 18px; }
-      .letter { padding: 30px 12px 12px; }
+      .letter { padding: 12px; }
     }
   </style>
 </head>
@@ -315,23 +335,28 @@
     </div>
 
     <p id="message"></p>
-  </main>
 
-  <!-- Hidden autoplay audio for Invisible String -->
-  <!-- Note: replace TRACK_ID below with Invisible String track ID if needed -->
-  <iframe
-    id="audioPlayer"
-    class="hidden-audio"
-    src=""
-    allow="autoplay; encrypted-media"
-    title="background music">
-  </iframe>
+    <section class="music">
+      <div class="spotify">
+        <!-- Spotify track embed -->
+        <iframe
+          style="border-radius:12px"
+          src="https://open.spotify.com/embed/track/6VsvKPJ4xjVNKpI8VVZ3SV?utm_source=generator"
+          width="100%"
+          height="152"
+          frameborder="0"
+          allowfullscreen=""
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy">
+        </iframe>
+      </div>
+    </section>
+  </main>
 
   <script>
     const overlay = document.getElementById('overlay');
     const envelopeBtn = document.getElementById('envelopeBtn');
     const card = document.getElementById('card');
-    const audioPlayer = document.getElementById('audioPlayer');
 
     const yesBtn = document.getElementById('yesBtn');
     const noBtn = document.getElementById('noBtn');
@@ -342,19 +367,10 @@
     let accepted = false;
     let introOpened = false;
 
-    // Taylor Swift - invisible string (track ID from your previous embed style)
-    // If Spotify ever changes this, swap with a new track ID.
-    const INVISIBLE_STRING_TRACK_ID = "6VsvKPJ4xjVNKpI8VVZ3SV";
-
-    function startMusic() {
-      // User gesture-triggered; best chance for autoplay on mobile/desktop
-      audioPlayer.src =
-        `https://open.spotify.com/embed/track/${INVISIBLE_STRING_TRACK_ID}?utm_source=generator&theme=0&autoplay=1`;
-    }
-
     // Open envelope first, then reveal card
     envelopeBtn.addEventListener('click', openEnvelopeIntro);
     envelopeBtn.addEventListener('pointerdown', (e) => {
+      // helps mobile feel immediate
       e.preventDefault();
       openEnvelopeIntro();
     });
@@ -363,9 +379,9 @@
       if (introOpened) return;
       introOpened = true;
 
-      startMusic();
       envelopeBtn.classList.add('open');
 
+      // wait for flap/letter animation, then fade overlay and reveal page
       setTimeout(() => {
         overlay.classList.add('hide');
         card.classList.add('revealed');
@@ -376,4 +392,66 @@
       accepted = true;
       message.textContent = "Yay!! I love you ❤️";
       burstHearts(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
-      yesBtn.style.transform = "scale(1
+
+      // Bonus: make yes bigger and hide no after acceptance
+      yesBtn.style.transform = "scale(1.08)";
+      noBtn.style.display = "none";
+    });
+
+    // Make No run away on hover (desktop)
+    noBtn.addEventListener('mouseenter', moveNoButton);
+
+    // Make No run away on touch/click (mobile)
+    noBtn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      moveNoButton();
+    });
+
+    function moveNoButton() {
+      if (accepted) return;
+
+      const rowRect = btnRow.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      // Switch to absolute positioning after first escape
+      if (noBtn.style.position !== 'absolute') {
+        noBtn.style.position = 'absolute';
+      }
+
+      // Keep button inside the button row area
+      const maxX = rowRect.width - btnRect.width;
+      const maxY = Math.max(0, rowRect.height - btnRect.height);
+
+      const x = Math.max(0, Math.random() * maxX);
+      const y = Math.max(0, Math.random() * maxY);
+
+      noBtn.style.left = `${x}px`;
+      noBtn.style.top = `${y}px`;
+
+      noEscapes++;
+      if (noEscapes < 4) {
+        message.textContent = ["Hmm... try again 😜", "Nope 😂", "Almost got it!", "Hehe 💕"][noEscapes - 1];
+      } else {
+        message.textContent = "The correct answer is Yes 😌❤️";
+      }
+    }
+
+    function burstHearts(x, y) {
+      for (let i = 0; i < 18; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'heart';
+        heart.textContent = ['💖', '💘', '💕', '❤️'][Math.floor(Math.random() * 4)];
+
+        const offsetX = (Math.random() - 0.5) * 150;
+        const offsetY = (Math.random() - 0.5) * 40;
+
+        heart.style.left = `${x + offsetX}px`;
+        heart.style.top = `${y + offsetY}px`;
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1600);
+      }
+    }
+  </script>
+</body>
+</html>
