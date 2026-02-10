@@ -312,8 +312,8 @@
         <div class="env-body"></div>
         <div class="env-flap"></div>
         <div class="letter">
-          <p>to: Lainie 💌</p>
-          <p>from: Tony ❤️</p>
+          <p>to: Lainie</p>
+          <p>from: Tony</p>
           <p class="small">tap to open</p>
         </div>
         <div class="seal">❤</div>
@@ -390,7 +390,7 @@
 
     yesBtn.addEventListener('click', (e) => {
       accepted = true;
-      message.textContent = "Yay!! I love you ❤️";
+      message.textContent = "I love you princess ❤️";
       burstHearts(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
 
       // Bonus: make yes bigger and hide no after acceptance
@@ -430,9 +430,9 @@
 
       noEscapes++;
       if (noEscapes < 4) {
-        message.textContent = ["Hmm... try again 😜", "Nope 😂", "Almost got it!", "Hehe 💕"][noEscapes - 1];
+        message.textContent = ["You Smell", "Try Again", "Really bruh", "Go Ahead and Click Yes for Me"][noEscapes - 1];
       } else {
-        message.textContent = "The correct answer is Yes 😌❤️";
+        message.textContent = "Dog Face Emoji";
       }
     }
 
