@@ -13,6 +13,8 @@
       --accent-dark: #e63e74;
       --soft: #ffd1e1;
       --card: #ffffff;
+      --env: #fff;
+      --env-line: #f3c8d8;
     }
 
     * { box-sizing: border-box; }
@@ -26,6 +28,7 @@
       background: linear-gradient(160deg, var(--bg1), var(--bg2));
       color: var(--text);
       padding: 16px;
+      overflow-x: hidden;
     }
 
     .card {
@@ -37,6 +40,16 @@
       text-align: center;
       position: relative;
       overflow: hidden;
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+      pointer-events: none;
+      transition: opacity .45s ease, transform .45s ease;
+    }
+
+    .card.revealed {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
     }
 
     h1 {
@@ -142,20 +155,175 @@
       100% { transform: translateY(-140px) scale(1.6); opacity: 0; }
     }
 
+    /* ---------- Envelope Intro Overlay ---------- */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(160deg, var(--bg1), var(--bg2));
+      z-index: 2000;
+      transition: opacity .45s ease, visibility .45s ease;
+      padding: 18px;
+    }
+
+    .overlay.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .env-wrap {
+      display: grid;
+      place-items: center;
+      gap: 14px;
+      text-align: center;
+      color: var(--text);
+    }
+
+    .tap-note {
+      font-weight: 700;
+      opacity: 0.8;
+      font-size: clamp(.92rem, 2.8vw, 1rem);
+    }
+
+    .envelope {
+      position: relative;
+      width: min(88vw, 420px);
+      aspect-ratio: 16 / 10;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .env-body {
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: var(--env);
+      border: 2px solid var(--env-line);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.14);
+      overflow: hidden;
+    }
+
+    .env-flap {
+      position: absolute;
+      inset: 0;
+      transform-origin: top center;
+      transition: transform .7s cubic-bezier(.2,.75,.2,1);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .env-flap::before {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      margin: auto;
+      width: 100%;
+      height: 58%;
+      background: linear-gradient(180deg, #ffe7ef, #ffd9e8);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      border-bottom: 2px solid var(--env-line);
+    }
+
+    .letter {
+      position: absolute;
+      left: 7%;
+      right: 7%;
+      bottom: 8%;
+      height: 74%;
+      background: #fffafc;
+      border: 2px solid #f6d8e4;
+      border-radius: 12px;
+      padding: 14px 14px 12px;
+      text-align: left;
+      transform: translateY(14%);
+      transition: transform .7s cubic-bezier(.2,.75,.2,1);
+      z-index: 2;
+      color: #5b2a3f;
+      box-shadow: inset 0 0 0 1px #fff;
+    }
+
+    .letter p {
+      margin: 0;
+      line-height: 1.5;
+      font-size: clamp(.95rem, 2.9vw, 1.08rem);
+      font-weight: 700;
+    }
+
+    .letter .small {
+      margin-top: 8px;
+      font-size: clamp(.82rem, 2.6vw, .94rem);
+      font-weight: 600;
+      opacity: 0.8;
+    }
+
+    .seal {
+      position: absolute;
+      left: 50%;
+      top: 54%;
+      transform: translate(-50%, -50%);
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: #ff5f98;
+      color: white;
+      font-size: 22px;
+      font-weight: 800;
+      box-shadow: 0 8px 18px rgba(230,62,116,0.35);
+      z-index: 4;
+      transition: transform .25s ease, opacity .35s ease;
+      pointer-events: none;
+    }
+
+    .envelope:hover .seal { transform: translate(-50%, -50%) scale(1.05); }
+
+    .envelope.open .env-flap {
+      transform: rotateX(180deg);
+    }
+
+    .envelope.open .letter {
+      transform: translateY(-18%);
+    }
+
+    .envelope.open .seal {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.7);
+    }
+
     @media (max-width: 430px) {
-      .btn-row {
-        min-height: 64px;
-      }
-      button {
-        padding: 11px 18px;
-      }
+      .btn-row { min-height: 64px; }
+      button { padding: 11px 18px; }
+      .letter { padding: 12px; }
     }
   </style>
 </head>
 <body>
+  <!-- Envelope Intro -->
+  <div class="overlay" id="overlay" aria-label="Open letter overlay">
+    <div class="env-wrap">
+      <button class="envelope" id="envelopeBtn" aria-label="Open envelope">
+        <div class="env-body"></div>
+        <div class="env-flap"></div>
+        <div class="letter">
+          <p>to: Lainie 💌</p>
+          <p>from: Tony ❤️</p>
+          <p class="small">tap to open</p>
+        </div>
+        <div class="seal">❤</div>
+      </button>
+      <div class="tap-note">Tap the envelope</div>
+    </div>
+  </div>
+
   <main class="card" id="card">
     <h1>Will you be my Valentine? ❤️</h1>
-    <p class="sub">I made this just for you ✨</p>
 
     <div class="photo-wrap">
       <img src="photo.jpeg" alt="Us together">
@@ -169,7 +337,6 @@
     <p id="message"></p>
 
     <section class="music">
-      <p>Our song: <em>invisible string</em> — Taylor Swift 💫</p>
       <div class="spotify">
         <!-- Spotify track embed -->
         <iframe
@@ -187,6 +354,10 @@
   </main>
 
   <script>
+    const overlay = document.getElementById('overlay');
+    const envelopeBtn = document.getElementById('envelopeBtn');
+    const card = document.getElementById('card');
+
     const yesBtn = document.getElementById('yesBtn');
     const noBtn = document.getElementById('noBtn');
     const message = document.getElementById('message');
@@ -194,11 +365,33 @@
 
     let noEscapes = 0;
     let accepted = false;
+    let introOpened = false;
+
+    // Open envelope first, then reveal card
+    envelopeBtn.addEventListener('click', openEnvelopeIntro);
+    envelopeBtn.addEventListener('pointerdown', (e) => {
+      // helps mobile feel immediate
+      e.preventDefault();
+      openEnvelopeIntro();
+    });
+
+    function openEnvelopeIntro() {
+      if (introOpened) return;
+      introOpened = true;
+
+      envelopeBtn.classList.add('open');
+
+      // wait for flap/letter animation, then fade overlay and reveal page
+      setTimeout(() => {
+        overlay.classList.add('hide');
+        card.classList.add('revealed');
+      }, 720);
+    }
 
     yesBtn.addEventListener('click', (e) => {
       accepted = true;
       message.textContent = "Yay!! I love you ❤️";
-      burstHearts(e.clientX, e.clientY);
+      burstHearts(e.clientX || window.innerWidth / 2, e.clientY || window.innerHeight / 2);
 
       // Bonus: make yes bigger and hide no after acceptance
       yesBtn.style.transform = "scale(1.08)";
