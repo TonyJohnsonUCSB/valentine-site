@@ -3,7 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Be My Valentine ❤️</title>
+
+  <!-- Primary metadata -->
+  <title>Weekend Photos</title>
+  <meta name="description" content="Shared album" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- Open Graph (iMessage link preview) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Weekend Photos" />
+  <meta property="og:description" content="Shared album" />
+  <meta property="og:url" content="https://tonyjohnsonucsb.github.io/valentine-site/" />
+  <meta property="og:image" content="https://tonyjohnsonucsb.github.io/valentine-site/preview.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <!-- Optional fallback for other platforms -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Weekend Photos" />
+  <meta name="twitter:description" content="Shared album" />
+  <meta name="twitter:image" content="https://tonyjohnsonucsb.github.io/valentine-site/preview.jpg" />
+
+  <!-- Optional iOS home-screen naming -->
+  <meta name="apple-mobile-web-app-title" content="Photos" />
+
   <style>
     :root {
       --bg1: #fff0f6;
@@ -35,7 +58,7 @@
       width: min(94vw, 560px);
       background: var(--card);
       border-radius: 22px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
       padding: clamp(16px, 3vw, 24px);
       text-align: center;
       position: relative;
@@ -43,7 +66,7 @@
       opacity: 0;
       transform: translateY(8px) scale(0.98);
       pointer-events: none;
-      transition: opacity .45s ease, transform .45s ease;
+      transition: opacity 0.45s ease, transform 0.45s ease;
     }
 
     .card.revealed {
@@ -56,12 +79,6 @@
       margin: 0 0 10px;
       font-size: clamp(1.35rem, 3.7vw, 2rem);
       line-height: 1.2;
-    }
-
-    .sub {
-      margin: 0 0 14px;
-      opacity: 0.85;
-      font-size: clamp(0.95rem, 2.8vw, 1.05rem);
     }
 
     .photo-wrap {
@@ -100,13 +117,11 @@
       font-weight: 700;
       cursor: pointer;
       color: white;
-      transition: transform .08s ease, background .2s ease, left .2s ease, top .2s ease;
+      transition: transform 0.08s ease, background 0.2s ease, left 0.2s ease, top 0.2s ease;
       touch-action: manipulation;
     }
 
-    #yesBtn {
-      background: var(--accent);
-    }
+    #yesBtn { background: var(--accent); }
     #yesBtn:hover { background: var(--accent-dark); }
     #yesBtn:active { transform: scale(0.98); }
 
@@ -122,7 +137,6 @@
       font-size: clamp(1rem, 2.8vw, 1.1rem);
     }
 
-    /* floating hearts */
     .heart {
       position: fixed;
       font-size: 20px;
@@ -136,7 +150,6 @@
       100% { transform: translateY(-140px) scale(1.6); opacity: 0; }
     }
 
-    /* ---------- Envelope Intro Overlay ---------- */
     .overlay {
       position: fixed;
       inset: 0;
@@ -144,7 +157,7 @@
       place-items: center;
       background: linear-gradient(160deg, var(--bg1), var(--bg2));
       z-index: 2000;
-      transition: opacity .45s ease, visibility .45s ease;
+      transition: opacity 0.45s ease, visibility 0.45s ease;
       padding: 18px;
     }
 
@@ -165,7 +178,7 @@
     .tap-note {
       font-weight: 700;
       opacity: 0.8;
-      font-size: clamp(.92rem, 2.8vw, 1rem);
+      font-size: clamp(0.92rem, 2.8vw, 1rem);
     }
 
     .envelope {
@@ -186,7 +199,7 @@
       border-radius: 16px;
       background: var(--env);
       border: 2px solid var(--env-line);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.14);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
       overflow: hidden;
     }
 
@@ -194,7 +207,7 @@
       position: absolute;
       inset: 0;
       transform-origin: top center;
-      transition: transform .7s cubic-bezier(.2,.75,.2,1);
+      transition: transform 0.7s cubic-bezier(0.2, 0.75, 0.2, 1);
       z-index: 3;
       pointer-events: none;
     }
@@ -202,7 +215,9 @@
     .env-flap::before {
       content: "";
       position: absolute;
-      left: 0; right: 0; top: 0;
+      left: 0;
+      right: 0;
+      top: 0;
       margin: auto;
       width: 100%;
       height: 58%;
@@ -223,7 +238,7 @@
       padding: 14px 14px 12px;
       text-align: left;
       transform: translateY(14%);
-      transition: transform .7s cubic-bezier(.2,.75,.2,1);
+      transition: transform 0.7s cubic-bezier(0.2, 0.75, 0.2, 1);
       z-index: 2;
       color: #5b2a3f;
       box-shadow: inset 0 0 0 1px #fff;
@@ -232,7 +247,7 @@
     .letter p {
       margin: 0;
       line-height: 1.5;
-      font-size: clamp(.95rem, 2.9vw, 1.08rem);
+      font-size: clamp(0.95rem, 2.9vw, 1.08rem);
       font-weight: 700;
     }
 
@@ -250,13 +265,15 @@
       color: white;
       font-size: 22px;
       font-weight: 800;
-      box-shadow: 0 8px 18px rgba(230,62,116,0.35);
+      box-shadow: 0 8px 18px rgba(230, 62, 116, 0.35);
       z-index: 4;
-      transition: transform .25s ease, opacity .35s ease;
+      transition: transform 0.25s ease, opacity 0.35s ease;
       pointer-events: none;
     }
 
-    .envelope:hover .seal { transform: translate(-50%, -50%) scale(1.05); }
+    .envelope:hover .seal {
+      transform: translate(-50%, -50%) scale(1.05);
+    }
 
     .envelope.open .env-flap {
       transform: rotateX(180deg);
@@ -304,30 +321,29 @@
 
     <div class="btn-row" id="btnRow">
       <button id="yesBtn">Yes 💘</button>
-      <button id="noBtn" aria-label="No button">Fuh NO</button>
+      <button id="noBtn" aria-label="No button">No 🙈</button>
     </div>
 
     <p id="message"></p>
   </main>
 
   <script>
-    const overlay = document.getElementById('overlay');
-    const envelopeBtn = document.getElementById('envelopeBtn');
-    const card = document.getElementById('card');
+    const overlay = document.getElementById("overlay");
+    const envelopeBtn = document.getElementById("envelopeBtn");
+    const card = document.getElementById("card");
 
-    const yesBtn = document.getElementById('yesBtn');
-    const noBtn = document.getElementById('noBtn');
-    const message = document.getElementById('message');
-    const btnRow = document.getElementById('btnRow');
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+    const message = document.getElementById("message");
+    const btnRow = document.getElementById("btnRow");
 
     let noEscapes = 0;
     let accepted = false;
     let introOpened = false;
 
-    // Open envelope first, then reveal card
-    envelopeBtn.addEventListener('click', openEnvelopeIntro);
-    envelopeBtn.addEventListener('pointerdown', (e) => {
-      e.preventDefault(); // helps mobile feel immediate
+    envelopeBtn.addEventListener("click", openEnvelopeIntro);
+    envelopeBtn.addEventListener("pointerdown", (e) => {
+      e.preventDefault();
       openEnvelopeIntro();
     });
 
@@ -335,33 +351,29 @@
       if (introOpened) return;
       introOpened = true;
 
-      envelopeBtn.classList.add('open');
+      envelopeBtn.classList.add("open");
 
-      // wait for flap/letter animation, then fade overlay and reveal page
       setTimeout(() => {
-        overlay.classList.add('hide');
-        card.classList.add('revealed');
+        overlay.classList.add("hide");
+        card.classList.add("revealed");
       }, 720);
     }
 
-    yesBtn.addEventListener('click', (e) => {
+    yesBtn.addEventListener("click", (e) => {
       accepted = true;
       message.textContent = "I love you princess ❤️";
+
       burstHearts(
         e.clientX || window.innerWidth / 2,
         e.clientY || window.innerHeight / 2
       );
 
-      // Bonus: make yes bigger and hide no after acceptance
-      yesBtn.style.transform = 'scale(1.08)';
-      noBtn.style.display = 'none';
+      yesBtn.style.transform = "scale(1.08)";
+      noBtn.style.display = "none";
     });
 
-    // Make No run away on hover (desktop)
-    noBtn.addEventListener('mouseenter', moveNoButton);
-
-    // Make No run away on touch/click (mobile)
-    noBtn.addEventListener('pointerdown', (e) => {
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("pointerdown", (e) => {
       e.preventDefault();
       moveNoButton();
     });
@@ -372,12 +384,10 @@
       const rowRect = btnRow.getBoundingClientRect();
       const btnRect = noBtn.getBoundingClientRect();
 
-      // Switch to absolute positioning after first escape
-      if (noBtn.style.position !== 'absolute') {
-        noBtn.style.position = 'absolute';
+      if (noBtn.style.position !== "absolute") {
+        noBtn.style.position = "absolute";
       }
 
-      // Keep button inside the button row area
       const maxX = rowRect.width - btnRect.width;
       const maxY = Math.max(0, rowRect.height - btnRect.height);
 
@@ -402,9 +412,9 @@
 
     function burstHearts(x, y) {
       for (let i = 0; i < 18; i++) {
-        const heart = document.createElement('div');
-        heart.className = 'heart';
-        heart.textContent = ['💖', '💘', '💕', '❤️'][Math.floor(Math.random() * 4)];
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = ["💖", "💘", "💕", "❤️"][Math.floor(Math.random() * 4)];
 
         const offsetX = (Math.random() - 0.5) * 150;
         const offsetY = (Math.random() - 0.5) * 40;
